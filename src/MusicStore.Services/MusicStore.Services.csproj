@@ -2,6 +2,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MusicStore.Repositories\MusicStore.Repositories.csproj" />
+    <ProjectReference Include="..\MusicStore.Dto\MusicStore.Dto.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="17.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
