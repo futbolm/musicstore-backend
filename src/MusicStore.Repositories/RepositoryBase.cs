@@ -2,7 +2,7 @@
 using MusicStore.Entities;
 
 namespace MusicStore.Repositories;
-
+/*
 public abstract class RepositoryBase<TEntity, TKey>
     : IRepositoryBase<TEntity, TKey>
     where TEntity : EntityBase<TKey>
@@ -45,5 +45,51 @@ public abstract class RepositoryBase<TEntity, TKey>
         _context.Set<TEntity>().Update(entity);
 
         await _context.SaveChangesAsync();
+    }
+}*/
+
+
+public abstract class RepositoryBase<TEntity, TKey>
+    : IRepositoryBase<TEntity, TKey>
+    where TEntity : EntityBase<TKey>
+{
+    protected readonly DbContext _context;
+    protected readonly DbSet<TEntity> _dbSet;
+
+    protected RepositoryBase(DbContext context)
+    {
+        _context = context;
+        _dbSet = _context.Set<TEntity>();
+    }
+
+    public IQueryable<TEntity> Query()
+        => _dbSet.AsNoTracking();
+
+    public async Task<TEntity?> GetByIdAsync(TKey id)
+        => await _dbSet.FindAsync(id);
+
+    public async Task<TEntity> AddAsync(TEntity entity)
+    {
+        await _dbSet.AddAsync(entity);
+        return entity; //ya NO guarda
+    }
+
+    public Task<TEntity> UpdateAsync(TEntity entity)
+    {
+        _dbSet.Update(entity);
+        return Task.FromResult(entity); //ya NO guarda
+    }
+
+    public async Task DeleteAsync(TKey id)
+    {
+        var entity = await GetByIdAsync(id);
+
+        if (entity is null)
+            return;
+
+        entity.Status = false; // soft delete
+        _dbSet.Update(entity);
+
+        //ya NO guarda
     }
 }

@@ -9,26 +9,19 @@ using MusicStore.Services.Exceptions;
 
 namespace MusicStore.Services;
 
-public class GenreService : IGenreService
+public class GenreService(
+    IGenreRepository _repository,
+    IUnitOfWork _unitOfWork,
+    ILogger<GenreService> _logger,
+    IMapper _mapper) : IGenreService
 {
-    private readonly IGenreRepository _repository; 
-    private readonly ILogger<GenreService> _logger;
-    private readonly IMapper _mapper;
+    
 
-    public GenreService(
-        IGenreRepository repository,
-        ILogger<GenreService> logger,
-        IMapper mapper)
-    {
-        _repository = repository;
-        _logger = logger;
-        _mapper = mapper;
-    }
     public async Task<IReadOnlyList<GenreResponseDto>> GetAsync()
     {
         var entities = await _repository
             .Query()
-            .Where(x => x.Status)
+            //.Where(x => x.Status)
             .ToListAsync();
 
         return _mapper.Map<IReadOnlyList<GenreResponseDto>>(entities);
@@ -53,6 +46,8 @@ public class GenreService : IGenreService
 
         var created = await _repository.AddAsync(entity);
 
+        await _unitOfWork.CommitAsync();
+
         return _mapper.Map<GenreResponseDto>(created);
     }
     public async Task<GenreResponseDto> UpdateAsync(int id, GenreRequestDto request)
@@ -68,6 +63,7 @@ public class GenreService : IGenreService
         _mapper.Map(request, entity);
 
         var updated = await _repository.UpdateAsync(entity);
+        await _unitOfWork.CommitAsync();
 
         return _mapper.Map<GenreResponseDto>(updated);
     }
@@ -82,7 +78,12 @@ public class GenreService : IGenreService
             throw new NotFoundException($"No se encontró el género con id {id}");
         }
 
+        
+
+
         await _repository.DeleteAsync(id);
+
+        await _unitOfWork.CommitAsync();
     }
 
 

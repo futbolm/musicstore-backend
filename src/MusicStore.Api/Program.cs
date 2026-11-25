@@ -23,11 +23,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IConcertRepository, ConcertRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+
+
+
 builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<ISaleService, SaleService>(); 
+builder.Services.AddScoped<IConcertService, ConcertService>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 builder.Services.AddAutoMapper(config =>
 {
    config.AddProfile<GenreMapperProfile>();
+   config.AddProfile<ConcertMapperProfile>();
+   config.AddProfile<SaleMapperProfile>();
 }); 
 
 var app = builder.Build();
