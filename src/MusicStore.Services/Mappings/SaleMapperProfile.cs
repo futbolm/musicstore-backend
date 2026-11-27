@@ -19,6 +19,7 @@ public class SaleMapperProfile : Profile
 
         CreateMap<Sale, SaleResponseDto>()
             .ForMember(d => d.SaleId, o => o.MapFrom(x => x.Id))
+            .ForMember(d => d.Email, o => o.MapFrom(x => x.Customer.Email))
             .ForMember(d => d.DateEvent, o => o.MapFrom(x => x.Concert.DateEvent.ToString("D", culture)))
             .ForMember(d => d.TimeEvent, o => o.MapFrom(x => x.Concert.DateEvent.ToString("T", culture)))
             .ForMember(d => d.Genre, o => o.MapFrom(x => x.Concert.Genre.Name))

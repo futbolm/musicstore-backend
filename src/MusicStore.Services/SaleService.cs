@@ -64,6 +64,7 @@ public class SaleService(
             .Query()
             .Include(x => x.Customer)
             .Include(x => x.Concert)
+            .ThenInclude(x => x.Genre) // esto agregamos 
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (sale is null)
@@ -80,6 +81,7 @@ public class SaleService(
             .Query()
             .Include(x => x.Customer)
             .Include(x => x.Concert)
+            .ThenInclude(x => x.Genre) // esto agregamos 
             .AsQueryable();
 
         if (start.HasValue)
@@ -101,6 +103,7 @@ public class SaleService(
             .Query()
             .Include(x => x.Customer)
             .Include(x => x.Concert)
+            .ThenInclude(x => x.Genre) // esto agregamos 
             .Where(x => x.Customer.Email == email);
 
         if (!string.IsNullOrWhiteSpace(title))

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MusicStore.Dto.Request;
 using MusicStore.Dto.Response;
 using MusicStore.Services;
@@ -31,6 +32,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult<GenreResponseDto>> Post(
         [FromBody] GenreRequestDto request)
     {
@@ -43,6 +45,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult<GenreResponseDto>> Put(
         int id,
         [FromBody] GenreRequestDto request)
@@ -52,6 +55,7 @@ public class GenresController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);

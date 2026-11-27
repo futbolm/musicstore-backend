@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Entities;
 using MusicStore.Persistence.Projections;
@@ -6,7 +8,7 @@ using System.Reflection;
 
 namespace MusicStore.Persistence;
 
-public class ApplicationDbContext : DbContext  
+public class ApplicationDbContext : IdentityDbContext<MusicStoreUserIdentity> //DbContext  
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -32,6 +34,15 @@ public class ApplicationDbContext : DbContext
             entity.HasNoKey();
             entity.ToView(null); //Esto evita que EF la incluya en migraciones
         });
+
+        // esto se agrego cuando entramos a seguridad
+        modelBuilder.Entity<MusicStoreUserIdentity>(x => x.ToTable("Users"));
+        modelBuilder.Entity<IdentityRole>(x => x.ToTable("Roles"));
+        modelBuilder.Entity<IdentityUserRole<string>>(x => x.ToTable("UserRoles"));
+        modelBuilder.Entity<IdentityRoleClaim<string>>(x => x.ToTable("RoleClaims"));
+        modelBuilder.Entity<IdentityUserClaim<string>>(x => x.ToTable("UserClaims"));
+        modelBuilder.Entity<IdentityUserLogin<string>>(x => x.ToTable("UserLogins"));
+        modelBuilder.Entity<IdentityUserToken<string>>(x => x.ToTable("UserTokens"));
 
     }
 

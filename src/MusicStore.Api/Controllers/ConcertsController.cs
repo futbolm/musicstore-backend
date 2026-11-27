@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MusicStore.Dto.Request;
 using MusicStore.Dto.Response;
 using MusicStore.Services;
@@ -28,6 +29,7 @@ public class ConcertsController(IConcertService _service) : ControllerBase
 
     // POST api/concerts
     [HttpPost]
+    [Authorize(Roles ="Administrator")]
     public async Task<ActionResult<ConcertResponseDto>> Post(
         [FromBody] ConcertRequestDto request)
     {
@@ -41,6 +43,7 @@ public class ConcertsController(IConcertService _service) : ControllerBase
 
     // PUT api/concerts/5
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult<ConcertResponseDto>> Put(
         int id,
         [FromBody] ConcertRequestDto request)
@@ -51,6 +54,7 @@ public class ConcertsController(IConcertService _service) : ControllerBase
 
     // DELETE api/concerts/5
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);
@@ -59,6 +63,7 @@ public class ConcertsController(IConcertService _service) : ControllerBase
 
     // PATCH api/concerts/5/finalize
     [HttpPatch("{id:int}/finalize")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Finalize(int id)
     {
         await _service.FinalizeAsync(id);
